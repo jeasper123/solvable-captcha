@@ -5,37 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unsolvable CAPTCHA</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        .captcha-container { display: inline-block; margin-top: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(3, 150px); gap: 5px; justify-content: center; }
-        .grid img { width: 150px; height: 150px; cursor: pointer; border: 2px solid transparent; transition: border 0.3s ease; }
-        .selected { border: 2px solid blue; }
-        .message { margin-top: 10px; color: red; font-weight: bold; }
-        h2 { margin-top: 20px; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .captcha-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .grid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border 0.3s ease;
+        }
+
+        .grid img.selected {
+            border: 2px solid #4285F4; /* Google blue border color */
+        }
+
+        .verify-btn {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .verify-btn:hover {
+            background-color: #3367D6;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 14px;
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-    <h2>Select all images with a stop sign</h2>
     <div class="captcha-container">
+        <h2>Select all images with a stop sign</h2>
         <div class="grid" id="imageGrid">
             <!-- Images inserted dynamically -->
         </div>
-        <button onclick="checkCaptcha()">Verify</button>
+        <button class="verify-btn" onclick="checkCaptcha()">Verify</button>
         <p class="message" id="message"></p>
     </div>
 
     <script>
-        // External image URLs (using random image sources from the web)
+        // URLs of images to be used in the CAPTCHA
         const images = [
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Stop_sign_US_1.svg/2048px-Stop_sign_US_1.svg.png', // Stop Sign
-            'https://www.w3schools.com/html/img_chania.jpg',  // Random image 1
-            'https://www.w3schools.com/html/img_fjords.jpg',  // Random image 2
-            'https://www.w3schools.com/html/img_lights.jpg',  // Random image 3
-            'https://www.w3schools.com/html/img_snow.jpg',    // Random image 4
-            'https://www.w3schools.com/html/img_nature.jpg',  // Random image 5
-            'https://www.w3schools.com/html/img_paris.jpg',   // Random image 6
-            'https://www.w3schools.com/html/img_sunset.jpg',  // Random image 7
-            'https://www.w3schools.com/html/img_mountains.jpg' // Random image 8
+            'https://randomwordgenerator.com/img/picture-generator/54e4d5474250a914f1dc8460962e33791c3ad6e04e5074417d2c7ed1924cc7_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/57e3d3444a52ac14f1dc8460962e33791c3ad6e04e50744172297cdd9f45c7_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/57e6d3424951a914f1dc8460962e33791c3ad6e04e507440762a7cd4924cc6_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/52e4d1424f5aa914f1dc8460962e33791c3ad6e04e5074417d2e72d2954ac5_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/55e1d5474957a914f1dc8460962e33791c3ad6e04e507440752f72d79f4fc4_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/57e7d74a4b57ab14f1dc8460962e33791c3ad6e04e507441722973d49645c2_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/53e2d6424d5aa514f1dc8460962e33791c3ad6e04e50744076297cd5944ac7_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/55e5d5454b5aac14f1dc8460962e33791c3ad6e04e507440772d7cdd914ec6_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/54e1dc444d57aa14f1dc8460962e33791c3ad6e04e5074417c2e7dd2944ec3_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/54e2d2424852a514f1dc8460962e33791c3ad6e04e5074417c2e7dd3964cc5_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/55e4d5474350b10ff3d8992cc12c30771037dbf852547849712a73d5954d_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/57e7d6454856ac14f1dc8460962e33791c3ad6e04e507440762a7cd6934acc_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/54e6d0474a5aa814f1dc8460962e33791c3ad6e04e507440752f72d7974fc1_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/52e6d3454253af14f1dc8460962e33791c3ad6e04e50744172287ad1904dc7_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/52e3d6434253ad14f1dc8460962e33791c3ad6e04e507440742a7ad6954cc4_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/53e1dd44435aaa14f1dc8460962e33791c3ad6e04e5077497c2a7cd49545c0_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/57e0d040495ba814f1dc8460962e33791c3ad6e04e50744074267bd69549c2_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/57e1d4474a57aa14f1dc8460962e33791c3ad6e04e507440722d72d29449c2_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/54e4d34b4951a414f1dc8460962e33791c3ad6e04e507440752972d3974cc5_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/57e2d6454856a914f1dc8460962e33791c3ad6e04e50744172287cd1964ac5_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/55e5d4434852aa14f1dc8460962e33791c3ad6e04e5074417d2d73d29f49c6_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/57e1d4454f5aaa14f1dc8460962e33791c3ad6e04e507441722a72dd934ec3_640.jpg',
+            'https://randomwordgenerator.com/img/picture-generator/odd-socks-4424190_640.jpg'
         ];
 
         function loadCaptcha() {
@@ -52,7 +126,7 @@
 
         function checkCaptcha() {
             let message = document.getElementById('message');
-            message.innerText = 'Incorrect. Try again.'; // You can customize this message
+            message.innerText = 'Incorrect. Try again.'; // Customize this message
             loadCaptcha();  // Reload CAPTCHA after every submission attempt (ensuring failure)
         }
 
