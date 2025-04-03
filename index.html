@@ -22,16 +22,31 @@
             width: 450px;
             padding: 20px;
             text-align: center;
+            box-sizing: border-box;
         }
 
         h2 {
-            font-size: 20px;
-            margin-bottom: 20px;
+            font-size: 16px; /* Smaller font size for the instruction */
+            margin-bottom: 10px;
             color: white; /* White text */
             background-color: #4285F4; /* Blue background */
-            padding: 16px;
+            padding: 20px 20px 10px 20px; /* Taller box, adjusted padding */
             font-weight: normal;
             margin-top: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        h2 span {
+            font-size: 14px; /* Smaller font size for general text */
+            line-height: 1.5;
+        }
+
+        h2 .stop-sign {
+            font-size: 22px; /* Larger font size for "stop sign" */
+            font-weight: bold;
         }
 
         .grid {
@@ -39,15 +54,17 @@
             grid-template-columns: repeat(3, 1fr); /* 3 columns */
             gap: 10px;
             margin-bottom: 20px;
+            width: 100%; /* Ensure the grid takes full width */
         }
 
         .grid img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Ensures image fits the square */
+            width: 100%; /* Take full width of grid cell */
+            height: 100%; /* Take full height of grid cell */
+            object-fit: cover; /* Crop the image to maintain square aspect */
             border: 2px solid transparent;
             cursor: pointer;
             transition: border 0.3s ease;
+            aspect-ratio: 1; /* Ensures square aspect ratio */
         }
 
         .grid img.selected {
@@ -80,7 +97,9 @@
 </head>
 <body>
     <div class="captcha-container">
-        <h2>Select all images with a stop sign</h2>
+        <h2>
+            <span>Select all images of <span class="stop-sign">stop sign</span></span>
+        </h2>
         <div class="grid" id="imageGrid">
             <!-- Images inserted dynamically -->
         </div>
