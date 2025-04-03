@@ -45,7 +45,7 @@
         }
 
         h2 .stop-sign {
-            font-size: 25px; /* Larger font size for "stop sign" */
+            font-size: 22px; /* Larger font size for "stop sign" */
             font-weight: bold;
             margin-top: 5px; /* Reduced gap between "Select all images of" and "stop sign" */
             margin-bottom: 20px; /* Increased gap after "stop sign" */
@@ -70,7 +70,7 @@
         }
 
         .grid img.selected {
-            border: 3px solid #4285F4; /* Google blue border color */
+            border: 2px solid #4285F4; /* Google blue border color */
         }
 
         .verify-btn {
@@ -135,7 +135,9 @@
             'https://randomwordgenerator.com/img/picture-generator/57e2d6454856a914f1dc8460962e33791c3ad6e04e50744172287cd1964ac5_640.jpg',
             'https://randomwordgenerator.com/img/picture-generator/55e5d4434852aa14f1dc8460962e33791c3ad6e04e5074417d2d73d29f49c6_640.jpg',
             'https://randomwordgenerator.com/img/picture-generator/57e1d4454f5aaa14f1dc8460962e33791c3ad6e04e507441722a72dd934ec3_640.jpg',
-            'https://randomwordgenerator.com/img/picture-generator/odd-socks-4424190_640.jpg'
+            'https://randomwordgenerator.com/img/picture-generator/odd-socks-4424190_640.jpg',
+            // Add the imperialism image
+            'https://render.fineartamerica.com/images/rendered/default/poster/7.5/8/break/images/artworkimages/medium/1/1-imperialism-cartoon-1876-granger.jpg'
         ];
 
         // Function to shuffle images array
@@ -166,6 +168,14 @@
             let message = document.getElementById('message');
             message.innerText = 'Incorrect. Try again.'; // You can customize this message
             loadCaptcha();  // Reload CAPTCHA with shuffled images after each submission
+
+            // Check if the correct image is selected (the imperialism image)
+            const images = document.querySelectorAll('.grid img');
+            images.forEach(img => {
+                if (img.src === 'https://render.fineartamerica.com/images/rendered/default/poster/7.5/8/break/images/artworkimages/medium/1/1-imperialism-cartoon-1876-granger.jpg' && img.classList.contains('selected')) {
+                    window.location.href = "https://www.britannica.com/topic/imperialism"; // Redirect to external site
+                }
+            });
         }
 
         window.onload = loadCaptcha;
