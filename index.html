@@ -136,48 +136,55 @@
             'https://randomwordgenerator.com/img/picture-generator/55e5d4434852aa14f1dc8460962e33791c3ad6e04e5074417d2d73d29f49c6_640.jpg',
             'https://randomwordgenerator.com/img/picture-generator/57e1d4454f5aaa14f1dc8460962e33791c3ad6e04e507441722a72dd934ec3_640.jpg',
             'https://randomwordgenerator.com/img/picture-generator/odd-socks-4424190_640.jpg',
-            // Add the imperialism image
+            // Add the "imperialism" image URL for testing
             'https://render.fineartamerica.com/images/rendered/default/poster/7.5/8/break/images/artworkimages/medium/1/1-imperialism-cartoon-1876-granger.jpg'
         ];
 
-        // Function to shuffle images array
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+        // Function to load and shuffle images into the grid
+        function loadCaptcha() {
+            // Shuffle the images array randomly
+            const shuffledImages = images.sort(() => 0.5 - Math.random());
+
+            // Get the image grid element
+            const imageGrid = document.getElementById('imageGrid');
+            imageGrid.innerHTML = ''; // Clear the grid
+
+            // Insert shuffled images into the grid
+            shuffledImages.slice(0, 9).forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = 'Captcha image';
+                img.classList.add('captcha-img');
+                img.addEventListener('click', () => img.classList.toggle('selected'));
+                imageGrid.appendChild(img);
+            });
+        }
+
+        // Function to check the selected images
+        function checkCaptcha() {
+            let message = document.getElementById('message');
+            message.innerText = ''; // Clear the previous message
+
+            const images = document.querySelectorAll('.grid img');
+            let imperialismSelected = false;
+
+            // Check if the imperialism image was selected
+            images.forEach(img => {
+                if (img.src === 'https://render.fineartamerica.com/images/rendered/default/poster/7.5/8/break/images/artworkimages/medium/1/1-imperialism-cartoon-1876-granger.jpg' && img.classList.contains('selected')) {
+                    imperialismSelected = true;
+                }
+            });
+
+            // Redirect to Britannica if the imperialism image is selected
+            if (imperialismSelected) {
+                window.location.href = "https://www.britannica.com/topic/imperialism"; // Redirect
+            } else {
+                message.innerText = 'Incorrect. Try again.';
+                loadCaptcha(); // Reload CAPTCHA
             }
         }
 
-        // Load and display 9 shuffled images
-        function loadCaptcha() {
-            const grid = document.getElementById('imageGrid');
-            grid.innerHTML = ''; // Clear previous images
-            shuffleArray(images); // Shuffle the image array
-            const selectedImages = images.slice(0, 9); // Select the first 9 images
-
-            selectedImages.forEach((imgSrc, index) => {
-                let img = document.createElement('img');
-                img.src = imgSrc;
-                img.dataset.id = index;
-                img.onclick = () => img.classList.toggle('selected');
-                grid.appendChild(img);
-            });
-        }
-
-        function checkCaptcha() {
-            let message = document.getElementById('message');
-            message.innerText = 'Incorrect. Try again.'; // You can customize this message
-            loadCaptcha();  // Reload CAPTCHA with shuffled images after each submission
-
-            // Check if the correct image is selected (the imperialism image)
-            const images = document.querySelectorAll('.grid img');
-            images.forEach(img => {
-                if (img.src === 'https://render.fineartamerica.com/images/rendered/default/poster/7.5/8/break/images/artworkimages/medium/1/1-imperialism-cartoon-1876-granger.jpg' && img.classList.contains('selected')) {
-                    window.location.href = "https://www.britannica.com/topic/imperialism"; // Redirect to external site
-                }
-            });
-        }
-
+        // Load CAPTCHA on page load
         window.onload = loadCaptcha;
     </script>
 </body>
