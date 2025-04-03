@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsolvable CAPTCHA</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .captcha-container { display: inline-block; margin-top: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(3, 100px); gap: 5px; }
+        .grid img { width: 100px; height: 100px; cursor: pointer; border: 2px solid transparent; }
+        .selected { border: 2px solid red; }
+        .message { margin-top: 10px; color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Select all images with a stop sign</h2>
+    <div class="captcha-container">
+        <div class="grid" id="imageGrid">
+            <!-- Images inserted dynamically -->
+        </div>
+        <button onclick="checkCaptcha()">Verify</button>
+        <p class="message" id="message"></p>
+    </div>
+    
+    <script>
+        const images = [
+            'stop_sign.jpg', 'cat.jpg', 'tree.jpg', 'bus.jpg', 'random_sign.jpg', 'dog.jpg', 'building.jpg', 'car.jpg', 'light.jpg'
+        ];
+
+        function loadCaptcha() {
+            const grid = document.getElementById('imageGrid');
+            grid.innerHTML = '';
+            images.forEach((imgSrc, index) => {
+                let img = document.createElement('img');
+                img.src = imgSrc;
+                img.dataset.id = index;
+                img.onclick = () => img.classList.toggle('selected');
+                grid.appendChild(img);
+            });
+        }
+
+        function checkCaptcha() {
+            let message = document.getElementById('message');
+            message.innerText = 'Incorrect. Try again.';
+            loadCaptcha();  // Reset CAPTCHA (rigging the system)
+        }
+
+        window.onload = loadCaptcha;
+    </script>
+</body>
+</html>
